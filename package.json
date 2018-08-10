@@ -1,0 +1,48 @@
+{
+  "name": "my-node-bootstrap",
+  "version": "0.1.0",
+  "description": "My Node-bootstrap with Typescript + Express",
+  "main": "index.js",
+  "scripts": {
+    "lint": "tslint --project ./ -c tslint.json",
+    "test": "jest",
+    "ts:watch": "tsc -w",
+    "ts": "tsc",
+    "dev": "pm2 start pm2-dev-app.yml && pm2 logs my-node-bootstrap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeemuKoivisto/my-node-bootstrap.git"
+  },
+  "keywords": [
+    "Node",
+    "TypeScript",
+    "Express.js",
+    "PostgreSQL",
+    "AWS"
+  ],
+  "author": "Teemu Koivisto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TeemuKoivisto/my-node-bootstrap/issues"
+  },
+  "homepage": "https://github.com/TeemuKoivisto/my-node-bootstrap#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.4",
+    "@types/express": "^4.16.0",
+    "@types/winston": "^2.3.9",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "typescript": "^3.0.1"
+  },
+  "dependencies": {
+    "@types/morgan": "^1.7.35",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "pm2": "^3.0.3",
+    "winston": "^3.0.0"
+  }
+}
