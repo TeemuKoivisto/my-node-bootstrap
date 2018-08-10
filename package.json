@@ -2,7 +2,7 @@
   "name": "my-node-bootstrap",
   "version": "0.1.0",
   "description": "My Node-bootstrap with Typescript + Express",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "lint": "tslint --project ./ -c tslint.json",
     "test": "jest",

@@ -15,9 +15,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
       throw new CustomError(`Password missing, not a string or less than 8 characters long `, 400)
     }
     const params = body as ILoginCredentials
-    console.log(params)
     const user = await userService.loginUser(params)
-    console.log(user)
     if (!user) {
       throw new CustomError('Login failed', 401)
     }
