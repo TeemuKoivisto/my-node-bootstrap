@@ -1,21 +1,28 @@
 import { Request, Response, NextFunction } from 'express'
+import * as Joi from 'joi'
 import { userService } from './user.service'
 
 import { CustomError } from '../../common'
 
 import { ILoginCredentials } from '../../interfaces/user'
 
+export const USER_CREDENTIALS_SCHEMA = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).max(255).required(),
+})
+
+// export const USER_SCHEMA = Joi.object({
+//   id: Joi.number().integer(),
+//   name: Joi.string().min(1).max(255).required(),
+//   email: Joi.string().email().required(),
+//   password: Joi.string().min(3).max(255).required(),
+//   privileges: Joi.string().min(1).max(255).required(),
+// })
+
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { body } = req
-    if (!body.email || typeof body.email !== 'string' || body.email.length < 3) {
-      throw new CustomError(`Email missing, not a string or less than 1 characters long `, 400)
-    }
-    if (!body.password || typeof body.password !== 'string' || body.password.length < 8) {
-      throw new CustomError(`Password missing, not a string or less than 8 characters long `, 400)
-    }
-    const params = body as ILoginCredentials
-    const user = await userService.loginUser(params)
+    const user = await userService.loginUser(body as ILoginCredentials)
     if (!user) {
       throw new CustomError('Login failed', 401)
     }
