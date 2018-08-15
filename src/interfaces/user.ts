@@ -18,4 +18,11 @@ export interface ILoginCredentials {
   password: string
 }
 
+export interface IUserCreateParams {
+  name: string
+  email: string
+  password: string
+  privileges: Privileges
+}
+
 export type Privileges = 'ADMIN' | 'USER'

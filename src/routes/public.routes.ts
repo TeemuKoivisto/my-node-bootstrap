@@ -11,5 +11,8 @@ router.post('/login',
   userCtrl.loginUser)
 
 router.get('/users', userCtrl.getUsers)
+router.post('/user',
+  validateBody(userCtrl.USER_CREATE_SCHEMA),
+  userCtrl.createUser)
 
 export default router
