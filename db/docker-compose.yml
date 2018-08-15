@@ -1,0 +1,12 @@
+version: '3'
+services:
+  my_postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: my-pg-password
+      POSTGRES_USER: pg-user
+      POSTGRES_DB: my_node_db_local
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5440:5432"

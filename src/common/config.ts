@@ -7,6 +7,12 @@ export const config = {
   port: process.env.PORT || 8800,
   log: {
     level: process.env.LOG_LEVEL || 'info',
-    colorized: process.env.LOG_COLORS || true
+  },
+  db: {
+    user: process.env.DB_USER,
+    pass: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    name: process.env.DB_NAME
   },
 }
