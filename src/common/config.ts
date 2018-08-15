@@ -9,10 +9,10 @@ export const config = {
     level: process.env.LOG_LEVEL || 'info',
   },
   db: {
-    user: process.env.DB_USER,
-    pass: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    name: process.env.DB_NAME
+    user: process.env.DB_USER || 'pg-user',
+    pass: process.env.DB_PASSWORD || 'my-pg-password',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5440,
+    name: process.env.DB_NAME || 'my_node_db_local'
   },
 }
