@@ -4,17 +4,18 @@
   "description": "My Node-bootstrap with Typescript + Express",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "tslint --project ./ -c tslint.json",
-    "test": "jest",
-    "ts:watch": "tsc -w",
-    "ts": "tsc",
     "dev": "pm2 start pm2-dev-app.yml && pm2 logs my-node-bootstrap",
     "db:add": "sh ./db/scripts/add-test-data.sh",
+    "db:connect": "./db/scripts/connect-to-db.sh",
     "db:docker": "docker exec -it db_my_postgres_1 bash",
     "db:migrate": "flyway -c db/migrations/conf.js migrate",
     "db:reset": "sh ./db/scripts/reset-db.sh",
     "db:start": "docker-compose -f ./db/docker-compose.yml up -d",
-    "db:stop": "docker-compose -f ./db/docker-compose.yml down"
+    "db:stop": "docker-compose -f ./db/docker-compose.yml down",
+    "lint": "tslint --project ./ -c tslint.json",
+    "test": "jest",
+    "ts:watch": "tsc -w",
+    "ts": "tsc"
   },
   "repository": {
     "type": "git",

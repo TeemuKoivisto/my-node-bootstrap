@@ -7,11 +7,10 @@ import { CustomError } from './error'
 import { IUser } from '../interfaces/user'
 import { IJwtPayload } from '../interfaces/auth'
 
+const SECRET = config.JWT.SECRET
+
 const ALGORITHM = 'HS384'
 const EXPIRATION_IN_MILLIS = 172800000 // 2 days
-const TOKEN_CHARACTER_LENGTH = 48
-
-const SECRET = config.JWT.SECRET
 
 export const jwtService = {
   createSessionToken(user: IUser, expires: number) {
@@ -35,6 +34,4 @@ export const jwtService = {
   createSessionExpiration() {
     return Date.now() + EXPIRATION_IN_MILLIS // Timestamp + 2 days in millis
   },
-  expirationInMillis: EXPIRATION_IN_MILLIS,
-  tokenCharacterLength: TOKEN_CHARACTER_LENGTH
 }

@@ -6,4 +6,4 @@ DB_USER=pg-user
 DB_PASSWORD=my-pg-password
 DB_NAME=my_node_db_local
 
-psql postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME} < ./db/scripts/reset_db.sql
+psql postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
