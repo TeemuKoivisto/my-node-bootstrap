@@ -10,7 +10,7 @@ const app = express()
 
 const corsOptions: cors.CorsOptions = {
   origin(origin, callback) {
-    if (config.env === 'local') {
+    if (config.ENV === 'local') {
       callback(null, true)
     } else {
       callback(null, false)

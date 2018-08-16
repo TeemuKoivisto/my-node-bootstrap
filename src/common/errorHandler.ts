@@ -15,7 +15,7 @@ export function errorHandler(err: IError, req: Request, res: Response, next: Nex
     } else {
       log.info('Handled error: ', err)
     }
-    if (config.env === 'local') {
+    if (config.ENV === 'local') {
       body.message = err.message
       body.stack = err.stack
     }

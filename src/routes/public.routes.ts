@@ -1,6 +1,7 @@
 import { Router } from 'express'
 
 import { validateBody } from '../middlewares/validateBody'
+import { authenticate } from '../middlewares/authMiddleware'
 
 import * as userCtrl from '../controllers/user/user.ctrl'
 
@@ -12,6 +13,7 @@ router.post('/login',
 
 router.get('/users', userCtrl.getUsers)
 router.post('/user',
+  authenticate,
   validateBody(userCtrl.USER_CREATE_SCHEMA),
   userCtrl.createUser)
 

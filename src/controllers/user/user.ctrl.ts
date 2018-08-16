@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 import * as Joi from 'joi'
 import { userService } from './user.service'
+import { jwtService } from '../../common/jwt.service'
 
 import { CustomError } from '../../common'
 
 import { ILoginCredentials, IUserCreateParams } from '../../interfaces/user'
+import { IAuthenticatedRequest } from '../../interfaces/auth'
 
 export const USER_CREDENTIALS_SCHEMA = Joi.object({
   email: Joi.string().email().required(),
@@ -32,7 +34,14 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     if (!user) {
       throw new CustomError('Login failed', 401)
     }
-    res.json({ user, jwt: '12345abcde' })
+    const expires = jwtService.createSessionExpiration()
+    res.json({
+      user,
+      jwt: {
+        expires,
+        token: jwtService.createSessionToken(user, expires)
+      }
+    })
   } catch (err) {
     next(err)
   }
@@ -47,7 +56,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
   }
 }
 
-export const createUser = async (req: Request, res: Response, next: NextFunction) => {
+export const createUser = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const user = await userService.createUser(req.body as IUserCreateParams)
     res.json({ user })

@@ -3,11 +3,11 @@ import { Pool } from 'pg'
 import { config } from '../common/config'
 
 const pool = new Pool({
-  user: config.db.user,
-  host: config.db.host,
-  database: config.db.name,
-  password: config.db.pass,
-  port: config.db.port as number,
+  user: config.DB.USER,
+  host: config.DB.HOST,
+  database: config.DB.NAME,
+  password: config.DB.PASS,
+  port: config.DB.PORT as number,
 })
 
 export const dbService = {
