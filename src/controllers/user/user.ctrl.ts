@@ -5,7 +5,7 @@ import { jwtService } from '../../common/jwt.service'
 
 import { CustomError } from '../../common'
 
-import { ILoginCredentials, IUserCreateParams } from '../../interfaces/user'
+import { IUser, ILoginCredentials, ILoginResponse, IUserCreateParams } from '../../interfaces/user'
 import { IAuthenticatedRequest } from '../../interfaces/auth'
 
 export const USER_CREDENTIALS_SCHEMA = Joi.object({
@@ -27,27 +27,30 @@ export const USER_SCHEMA = Joi.object({
   privileges: Joi.string().min(1).max(255).required(),
 })
 
+function createLoginResponse(user: IUser) {
+  const expires = jwtService.createSessionExpiration()
+  return {
+    user,
+    jwt: {
+      expires,
+      token: jwtService.createSessionToken(user, expires)
+    }
+  } as ILoginResponse
+}
+
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { body } = req
-    const user = await userService.loginUser(body as ILoginCredentials)
+    const user = await userService.loginUser(req.body as ILoginCredentials)
     if (!user) {
       throw new CustomError('Login failed', 401)
     }
-    const expires = jwtService.createSessionExpiration()
-    res.json({
-      user,
-      jwt: {
-        expires,
-        token: jwtService.createSessionToken(user, expires)
-      }
-    })
+    res.json(createLoginResponse(user))
   } catch (err) {
     next(err)
   }
 }
 
-export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+export const getUsers = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const users = await userService.getUsers()
     res.json({ users })

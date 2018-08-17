@@ -5,7 +5,7 @@ import { jwtService } from '../common/jwt.service'
 import { CustomError } from '../common'
 
 // import { IUser } from '../interfaces/user'
-import { IAuthenticatedRequest } from '../interfaces/auth'
+import { IAuthenticatedRequest, IJwtPayload } from '../interfaces/auth'
 
 function parseJwtFromHeaders(req: Request) {
   if (req.headers.authorization && req.headers.authorization.toLowerCase().includes('bearer')) {
@@ -19,10 +19,15 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   if (!jwtToken) {
     next(new CustomError('Missing authorization header with Bearer token', 401))
   }
-  const decrypted = jwtService.decryptSessionToken(jwtToken as string)
-  if (decrypted.expires < Date.now()) {
+  let decrypted: IJwtPayload | undefined
+  try {
+    decrypted = jwtService.decryptSessionToken(jwtToken as string)
+  } catch (err) {
+    next(err)
+  }
+  if (decrypted && decrypted.expires < Date.now()) {
     next(new CustomError('Token has expired', 401))
-  } else {
+  } else if (decrypted) {
     const mutatedReq = req as IAuthenticatedRequest
     mutatedReq.authenticatedUser = decrypted.user
     await next()

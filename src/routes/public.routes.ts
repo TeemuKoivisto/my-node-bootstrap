@@ -11,7 +11,9 @@ router.post('/login',
   validateBody(userCtrl.USER_CREDENTIALS_SCHEMA),
   userCtrl.loginUser)
 
-router.get('/users', userCtrl.getUsers)
+router.get('/users',
+  authenticate,
+  userCtrl.getUsers)
 router.post('/user',
   authenticate,
   validateBody(userCtrl.USER_CREATE_SCHEMA),
