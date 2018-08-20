@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
-LOCAL_PORT=8800
-CONTAINER_PORT=8800
+LOCAL_PORT=9601
+CONTAINER_PORT=8600
 
 NAMESPACE="teemukoivisto"
 IMAGE_NAME="my-node-bootstrap"
