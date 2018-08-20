@@ -4,18 +4,19 @@ import publicRoutes from './routes/public.routes'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 
-import { errorHandler, logStream, config } from './common'
+import { errorHandler, logStream } from './common'
 
 const app = express()
 
 const corsOptions: cors.CorsOptions = {
-  origin(origin, callback) {
-    if (config.ENV === 'local') {
-      callback(null, true)
-    } else {
-      callback(null, false)
-    }
-  },
+  // origin(origin, callback) {
+  //   if (config.ENV === 'local') {
+  //     callback(null, true)
+  //   } else {
+  //     callback(null, false)
+  //   }
+  // },
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'OPTIONS']
 }
 
