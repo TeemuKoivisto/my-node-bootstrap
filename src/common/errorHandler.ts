@@ -11,9 +11,11 @@ export function errorHandler(err: IError, req: Request, res: Response, next: Nex
     const message = statusCode === 500 ? 'Internal server error.' : 'Something went wrong.'
     const body: { message: string, stack?: string } = { message }
     if (statusCode === 500) {
-      log.error('Handled internal server error: ', err)
+      log.error('Handled internal server error: ' + err)
+      log.error('Stack: ' + err.stack)
     } else {
-      log.info('Handled error: ', err)
+      log.info('Handled error: ' + err)
+      log.debug('Stack: ' + err.stack)
     }
     if (config.ENV === 'local') {
       body.message = err.message

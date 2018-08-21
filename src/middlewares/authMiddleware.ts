@@ -17,19 +17,21 @@ function parseJwtFromHeaders(req: Request) {
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const jwtToken = parseJwtFromHeaders(req)
   if (!jwtToken) {
-    next(new CustomError('Missing authorization header with Bearer token', 401))
+    // Without return this method would continue processing and genereate TWO errors
+    // which the next wouldn't be caught by the errorHandler -> always remember to return next() in if
+    return next(new CustomError('Missing authorization header with Bearer token', 401))
   }
   let decrypted: IJwtPayload | undefined
   try {
     decrypted = jwtService.decryptSessionToken(jwtToken as string)
   } catch (err) {
-    next(err)
+    return next(err)
   }
   if (decrypted && decrypted.expires < Date.now()) {
     next(new CustomError('Token has expired', 401))
   } else if (decrypted) {
     const mutatedReq = req as IAuthenticatedRequest
     mutatedReq.authenticatedUser = decrypted.user
-    await next()
+    next()
   }
 }

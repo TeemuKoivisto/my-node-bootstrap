@@ -7,7 +7,7 @@ ENV INSTALL_PATH /usr/my-node-bootstrap
 
 WORKDIR ${INSTALL_PATH}
 
-COPY package.json yarn.lock tsconfig.json tslint.json ./
+COPY package.json yarn.lock tsconfig.json tslint.json pm2-prod-app.yml ./
 RUN yarn
 
 COPY ./src ./src
@@ -31,7 +31,8 @@ COPY --from=builder ${INSTALL_PATH}/dist ./dist
 COPY --from=builder ${INSTALL_PATH}/node_modules ./node_modules
 COPY --from=builder ${INSTALL_PATH}/db ./db
 COPY --from=builder ${INSTALL_PATH}/package.json ./
+COPY --from=builder ${INSTALL_PATH}/pm2-prod-app.yml ./
 
 EXPOSE ${API_PORT}
 
-CMD ["node", "./dist/index.js"]
+CMD ["./node_modules/pm2/bin/pm2-runtime", "start", "pm2-prod-app.yml"]

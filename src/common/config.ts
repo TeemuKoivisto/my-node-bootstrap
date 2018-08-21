@@ -13,7 +13,7 @@ export const config = {
     PASS: process.env.DB_PASSWORD || 'my-pg-password',
     HOST: process.env.DB_HOST || 'localhost',
     PORT: process.env.DB_PORT || 5440,
-    NAME: process.env.DB_NAME || 'my_node_db_local'
+    NAME: process.env.DB_NAME || 'my_postgres_db'
   },
   JWT: {
     SECRET: process.env.JWT_SECRET || 'verylongrandomstring',

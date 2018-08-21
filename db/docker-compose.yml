@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_PASSWORD: my-pg-password
       POSTGRES_USER: pg-user
-      POSTGRES_DB: my_node_db_local
+      POSTGRES_DB: my_postgres_db
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:

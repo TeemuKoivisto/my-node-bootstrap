@@ -42,7 +42,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
   try {
     const user = await userService.loginUser(req.body as ILoginCredentials)
     if (!user) {
-      throw new CustomError('Login failed', 401)
+      throw new CustomError('Login failed, no user found with given credentials', 401)
     }
     res.json(createLoginResponse(user))
   } catch (err) {
