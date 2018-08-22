@@ -42,7 +42,6 @@
     "@types/morgan": "^1.7.35",
     "@types/pg": "^7.4.10",
     "@types/winston": "^2.3.9",
-    "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.9.2",
@@ -50,6 +49,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "joi": "13.6.0",
     "jsonwebtoken": "8.3.0",

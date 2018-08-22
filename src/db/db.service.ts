@@ -7,7 +7,7 @@ const pool = new Pool({
   host: config.DB.HOST,
   database: config.DB.NAME,
   password: config.DB.PASS,
-  port: config.DB.PORT as number,
+  port: config.DB.PORT,
 })
 
 export const dbService = {

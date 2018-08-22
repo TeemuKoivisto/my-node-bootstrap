@@ -24,14 +24,15 @@ LABEL maintainer="https://github.com/teemukoivisto"
 
 ENV API_PORT 8800
 ENV INSTALL_PATH /usr/my-node-bootstrap
+ENV CORS_SAME_ORIGIN true
 
 WORKDIR ${INSTALL_PATH}
 
 COPY --from=builder ${INSTALL_PATH}/dist ./dist
-COPY --from=builder ${INSTALL_PATH}/node_modules ./node_modules
 COPY --from=builder ${INSTALL_PATH}/db ./db
-COPY --from=builder ${INSTALL_PATH}/package.json ./
-COPY --from=builder ${INSTALL_PATH}/pm2-prod-app.yml ./
+COPY --from=builder ${INSTALL_PATH}/package.json ${INSTALL_PATH}/yarn.lock ${INSTALL_PATH}/pm2-prod-app.yml ./
+
+RUN yarn install --production
 
 EXPOSE ${API_PORT}
 
