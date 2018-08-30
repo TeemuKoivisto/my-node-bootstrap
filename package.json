@@ -10,6 +10,7 @@
     "db:docker": "docker exec -it db_my_postgres_1 bash",
     "db:migrate": "flyway -c db/migrations/conf.js migrate",
     "db:reset": "sh ./db/scripts/reset-db.sh",
+    "db:seed": "flyway -c db/seed/conf.js migrate",
     "db:start": "docker-compose -f ./db/docker-compose.yml up -d",
     "db:stop": "docker-compose -f ./db/docker-compose.yml down",
     "lint": "tslint --project ./ -c tslint.json",
