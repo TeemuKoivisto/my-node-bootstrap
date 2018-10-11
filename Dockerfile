@@ -22,9 +22,11 @@ FROM node:8.11.0
 
 LABEL maintainer="https://github.com/teemukoivisto"
 
-ENV API_PORT 8800
+ENV API_PORT 8600
 ENV INSTALL_PATH /usr/my-node-bootstrap
 ENV CORS_SAME_ORIGIN true
+# the ENVs are not shared so NODE_ENV needs to be set again
+ENV NODE_ENV production
 
 WORKDIR ${INSTALL_PATH}
 

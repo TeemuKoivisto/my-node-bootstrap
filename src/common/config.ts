@@ -1,10 +1,10 @@
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'local') {
+if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'local') {
   require('dotenv').config()
 }
 
 export const config = {
   ENV: process.env.NODE_ENV || 'local',
-  PORT: process.env.PORT || 8800,
+  PORT: process.env.PORT || 8600,
   CORS_SAME_ORIGIN: process.env.CORS_SAME_ORIGIN || 'true',
   LOG: {
     LEVEL: process.env.LOG_LEVEL || 'info',
