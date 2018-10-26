@@ -8,6 +8,5 @@ rm-images() {
 
 rm-containers() {
   local GREP_STRING=$1
-  docker ps -a | grep "${GREP_STRING}" | awk '{print $1}' | xargs docker stop
-  docker ps -a | grep "${GREP_STRING}" | awk '{print $1}' | xargs docker rm
+  docker ps -a | grep "${GREP_STRING}" | awk '{print $1}' | xargs docker stop | xargs docker rm
 }

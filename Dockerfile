@@ -3,7 +3,9 @@ FROM node:8.11.0 as builder
 
 # Set NODE_ENV to build so that all devDependencies are fetched and tslint won't fail
 ENV NODE_ENV build
-ENV INSTALL_PATH /usr/my-node-bootstrap
+# Interesting read about where to install your program in UNIX filesystem
+# https://askubuntu.com/questions/130186/what-is-the-rationale-for-the-usr-directory
+ENV INSTALL_PATH /opt/my-node-bootstrap
 
 WORKDIR ${INSTALL_PATH}
 
@@ -23,7 +25,7 @@ FROM node:8.11.0
 LABEL maintainer="https://github.com/teemukoivisto"
 
 ENV API_PORT 8600
-ENV INSTALL_PATH /usr/my-node-bootstrap
+ENV INSTALL_PATH /opt/my-node-bootstrap
 ENV CORS_SAME_ORIGIN true
 # the ENVs are not shared so NODE_ENV needs to be set again
 ENV NODE_ENV production

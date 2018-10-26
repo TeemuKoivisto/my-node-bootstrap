@@ -17,8 +17,9 @@ function parseJwtFromHeaders(req: Request) {
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const jwtToken = parseJwtFromHeaders(req)
   if (!jwtToken) {
-    // Without return this method would continue processing and genereate TWO errors
-    // which the next wouldn't be caught by the errorHandler -> always remember to return next() in if
+    // Without return this method would continue processing and generate TWO errors
+    // of which the next one wouldn't get caught by the errorHandler
+    // -> always remember to return next() inside if
     return next(new CustomError('Missing authorization header with Bearer token', 401))
   }
   let decrypted: IJwtPayload | undefined
