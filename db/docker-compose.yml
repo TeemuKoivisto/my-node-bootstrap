@@ -1,7 +1,7 @@
 version: '3'
 services:
   my_postgres:
-    image: postgres
+    image: postgres:11.2-alpine
     environment:
       POSTGRES_PASSWORD: my-pg-password
       POSTGRES_USER: pg-user
@@ -10,3 +10,17 @@ services:
       - ./data:/var/lib/postgresql/data
     ports:
       - "5440:5432"
+  migrate:
+    image: boxfuse/flyway:5.2.4-alpine
+    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh my_postgres:5432 -- flyway migrate"]
+    depends_on:
+      - my_postgres
+    volumes:
+    - ./migrations:/flyway/sql
+    - ./seed/afterMigrate.sql:/flyway/sql/afterMigrate.sql
+    - ./scripts/wait-for-it.sh:/flyway/wait-for-it.sh
+    environment:
+      FLYWAY_PASSWORD: my-pg-password
+      FLYWAY_USER: pg-user
+      FLYWAY_URL: jdbc:postgresql://my_postgres:5432/my_postgres_db
+      FLYWAY_CONNECT_RETRIES: 180
