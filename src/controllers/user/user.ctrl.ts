@@ -5,8 +5,8 @@ import { jwtService } from '../../common/jwt.service'
 
 import { CustomError } from '../../common'
 
-import { IUser, ILoginCredentials, ILoginResponse, IUserCreateParams } from '../../interfaces/user'
-import { IAuthenticatedRequest } from '../../interfaces/auth'
+import { IUser, ILoginCredentials, ILoginResponse, IUserCreateParams } from '../../types/user'
+import { IAuthRequest } from '../../types/auth'
 
 export const USER_CREDENTIALS_SCHEMA = Joi.object({
   email: Joi.string().email().required(),
@@ -38,9 +38,9 @@ function createLoginResponse(user: IUser) {
   } as ILoginResponse
 }
 
-export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+export const loginUser = async (req: Request<ILoginCredentials>, res: Response, next: NextFunction) => {
   try {
-    const user = await userService.loginUser(req.body as ILoginCredentials)
+    const user = await userService.loginUser(req.body)
     if (!user) {
       throw new CustomError('Login failed, no user found with given credentials', 401)
     }
@@ -50,7 +50,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
   }
 }
 
-export const getUsers = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
+export const getUsers = async (req: IAuthRequest<{}>, res: Response, next: NextFunction) => {
   try {
     const users = await userService.getUsers()
     res.json({ users })
@@ -59,9 +59,9 @@ export const getUsers = async (req: IAuthenticatedRequest, res: Response, next: 
   }
 }
 
-export const createUser = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
+export const createUser = async (req: IAuthRequest<IUserCreateParams>, res: Response, next: NextFunction) => {
   try {
-    const user = await userService.createUser(req.body as IUserCreateParams)
+    const user = await userService.createUser(req.body)
     res.json({ user })
   } catch (err) {
     next(err)

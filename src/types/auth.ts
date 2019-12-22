@@ -6,6 +6,7 @@ export interface IJwtPayload {
   user: IUser
 }
 
-export interface IAuthenticatedRequest extends Request {
-  authenticatedUser: IUser
+export interface IAuthRequest<P = {}> extends Request {
+  user: IUser
+  body: P
 }

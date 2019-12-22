@@ -1,3 +1,5 @@
+import * as core from 'express-serve-static-core'
+
 /**
  * Database schema interfaces
  */
@@ -22,7 +24,7 @@ export type Privileges = 'ADMIN' | 'USER'
  * Route specific interfaces
  */
 
-export interface ILoginCredentials {
+export interface ILoginCredentials extends core.ParamsDictionary {
   email: string
   password: string
 }

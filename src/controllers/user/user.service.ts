@@ -1,11 +1,11 @@
 import { dbService } from '../../db/db.service'
 
-import { IUser, ILoginCredentials, IUserCreateParams } from '../../interfaces/user'
+import { IUser, ILoginCredentials, IUserCreateParams } from '../../types/user'
 
 export const userService = {
   loginUser: async (credentials: ILoginCredentials) : Promise<IUser | undefined> => {
     const user = await dbService.queryOne(
-      `SELECT id, name, email, privileges FROM app_user WHERE email=$1 AND password=$2`,
+      'SELECT id, name, email, privileges FROM app_user WHERE email=$1 AND password=$2',
       [credentials.email, credentials.password]) as IUser | undefined
     return user
   },
