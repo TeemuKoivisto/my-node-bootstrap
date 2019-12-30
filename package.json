@@ -1,6 +1,6 @@
 {
   "name": "my-node-bootstrap",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "My Node-bootstrap with Typescript + Express",
   "main": "dist/index.js",
   "scripts": {
