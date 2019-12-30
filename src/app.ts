@@ -24,7 +24,9 @@ app.use(express.json())
 
 app.use(morgan('short', { stream: logStream }))
 
-app.use('', publicRoutes)
+app.get('/health', (req: any, res: any) => { res.sendStatus(200) })
+
+app.use('/api', publicRoutes)
 app.use(errorHandler)
 
 export { app }

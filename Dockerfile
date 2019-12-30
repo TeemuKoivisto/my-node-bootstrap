@@ -9,7 +9,7 @@ ENV INSTALL_PATH /opt/my-node-bootstrap
 
 WORKDIR ${INSTALL_PATH}
 
-COPY package.json yarn.lock tsconfig.json tslint.json pm2-prod-app.yml ./
+COPY package.json yarn.lock tsconfig.json tslint.json start.sh ./
 RUN yarn
 
 COPY ./src ./src
@@ -24,20 +24,28 @@ FROM node:10.15.0-alpine
 
 LABEL maintainer="https://github.com/teemukoivisto"
 
-ENV API_PORT 8600
+ENV PORT 8600
 ENV INSTALL_PATH /opt/my-node-bootstrap
 ENV CORS_SAME_ORIGIN true
 # the ENVs are not shared so NODE_ENV needs to be set again
 ENV NODE_ENV production
 
+# Install AWS CLI
+RUN \
+  mkdir -p /aws && \
+  apk -Uuv add groff less python py-pip git && \
+  pip install awscli && \
+  apk --purge -v del py-pip && \
+  rm /var/cache/apk/*
+
 WORKDIR ${INSTALL_PATH}
 
 COPY --from=builder ${INSTALL_PATH}/dist ./dist
 COPY --from=builder ${INSTALL_PATH}/db ./db
-COPY --from=builder ${INSTALL_PATH}/package.json ${INSTALL_PATH}/yarn.lock ${INSTALL_PATH}/pm2-prod-app.yml ./
+COPY --from=builder ${INSTALL_PATH}/package.json ${INSTALL_PATH}/yarn.lock ${INSTALL_PATH}/start.sh ./
 
 RUN yarn install --production
 
-EXPOSE ${API_PORT}
+EXPOSE ${PORT}
 
-CMD ["./node_modules/pm2/bin/pm2-runtime", "start", "pm2-prod-app.yml"]
+CMD ["./start.sh"]
