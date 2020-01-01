@@ -42,9 +42,9 @@ aws cloudformation update-stack \
       ParameterKey=Project,ParameterValue=${PROJECT} \
       ParameterKey=Environment,ParameterValue=${ENVIRONMENT} \
       ParameterKey=VpcId,UsePreviousValue=true \
-      ParameterKey=PublicSubnet1Id,UsePreviousValue=true \
-      ParameterKey=PublicSubnet2Id,UsePreviousValue=true \
-      ParameterKey=PublicSubnet3Id,UsePreviousValue=true \
+      ParameterKey=1PublicSubnetId,UsePreviousValue=true \
+      ParameterKey=2PublicSubnetId,UsePreviousValue=true \
+      ParameterKey=3PublicSubnetId,UsePreviousValue=true \
       ParameterKey=AppSecurityGroupId,UsePreviousValue=true \
       ParameterKey=ECSClusterName,UsePreviousValue=true \
       ParameterKey=ScalingRoleArn,UsePreviousValue=true \
@@ -52,6 +52,8 @@ aws cloudformation update-stack \
       ParameterKey=ExampleNodejsRepositoryUri,UsePreviousValue=true \
       ParameterKey=ServiceName,ParameterValue=${ECS_SERVICE_NAME} \
       ParameterKey=ImageTag,ParameterValue=${NEW_TAG} \
+      ParameterKey=DBName,UsePreviousValue=true \
+      ParameterKey=DBURL,UsePreviousValue=true \
       ParameterKey=ApplicationPort,UsePreviousValue=true
 
 aws cloudformation wait stack-update-complete \
