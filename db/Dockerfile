@@ -15,5 +15,4 @@ COPY ./scripts/aws-migrate.sh /flyway/aws-migrate.sh
 
 WORKDIR /flyway
 
-CMD ["ls", "-la"]
-CMD ["./aws-migrate.sh"]
+ENTRYPOINT ["./aws-migrate.sh"]

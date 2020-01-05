@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+#####
+# This script migrates the database using Flyway migrations inside db/migrations folder. Flyway is a simple
+# migration library that is first and foremost, simple to use and uses just regular .sql-files instead of
+# library specific magic. I'm using a MD5 checksum of the migrations-folder contents to prevent migrations
+# being run when there are no migrations. But if there are migrations, we are simply using a Flyway Docker-image
+# to run them as "migration" ECS-task as defined in Sceptre ecs-db-migration.yaml-file.
+#
+# There aren't really checks incase something fails, and if something fails you probably you have to fix it manually
+# eg something goes wrong in the ECS migration task. If you were by accident to run some buggy migrations which either
+# fail or are missing something, the only correct way is to either create a new one with "Vx_x__xx" or undo one
+# "Ux_x_xx". This is because Flyway stores the last ran migration's version number, and won't run any new migrations
+# below that number even if their files are changed.
+#
+# Usage: AWS_PROFILE=x ./cf-db-migrate.sh ?(dev|prod) ?x
+# where 1st argument is the environment which is either dev or prod
+# and 2nd argument any string to pass the checksum check (incase the previous migration
+# ECS task failed but updated the checksum)
+#####
+
 print_red() {
   printf "\033[1;31m$1\033[0m\n"
 }
@@ -9,6 +28,12 @@ if [ -z "$1" ]; then
   ENVIRONMENT="dev"
 else
   ENVIRONMENT=$1
+fi
+
+if [ -z "$2" ]; then
+  SKIP_CHECKSUM=false
+else
+  SKIP_CHECKSUM=true
 fi
 
 ##### Sceptre specific attributes
@@ -24,6 +49,7 @@ ECS_SERVICE_NAME="migration"
 # Defined in the ecr.yaml RepositoryName with ${Project}-${Environment}/${ExampleNodejsAppName}
 ECR_REPOSITORY=${PROJECT}-${ENVIRONMENT}/${ECR_APP_NAME}
 REGISTRY_URL=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+IMAGE_TAG="latest"
 # The to-be-updated Sceptre stack (and only its "Image" parameter)
 TEMPLATE_NAME="ecs-db-migration"
 CF_STACK_NAME=${PROJECT}-${ENVIRONMENT}-${AWS_REGION}-${TEMPLATE_NAME} # Probably example-app-dev-eu-west-1-ecs-service
@@ -38,7 +64,7 @@ CURRENT_CHECKSUM=$(aws ssm get-parameter \
   --output text \
   --query Parameter.Value)
 
-if [ "$CHECKSUM" = "$CURRENT_CHECKSUM" ]; then
+if [ "$CHECKSUM" = "$CURRENT_CHECKSUM" ] && [ $SKIP_CHECKSUM = false ]; then
   print_red "0) Migrations checksum unchanged - skip migrations"
   exit 0
 fi
@@ -46,18 +72,16 @@ fi
 print_red "0) Running the migrations"
 
 # Eg 014750007983.dkr.ecr.eu-west-1.amazonaws.com/example-app-dev/migration:latest
-IMAGE_WITH_LATEST_TAG=${REGISTRY_URL}/${ECR_REPOSITORY}:latest
+IMAGE_WITH_LATEST_TAG=${REGISTRY_URL}/${ECR_REPOSITORY}:${IMAGE_TAG}
 
 set +x
 eval $(aws ecr get-login --no-include-email --region ${AWS_REGION})
 # set -x
 
-print_red "1) Building the new Docker images with the ${VERSION_TAG} and 'latest' tags"
-cd db
-docker build -t ${IMAGE_WITH_LATEST_TAG} .
-cd ..
+print_red "1) Building the new Docker images with '${IMAGE_TAG}' tag"
+docker build -t ${IMAGE_WITH_LATEST_TAG} -f ./db/Dockerfile ./db
 
-print_red "2) Pushing the image with 'latest' tag"
+print_red "2) Pushing the image with '${IMAGE_TAG}' tag"
 docker push ${IMAGE_WITH_LATEST_TAG}
 
 print_red "3) Update the CloudFormation stack ${CF_STACK_NAME}"
@@ -71,7 +95,7 @@ aws cloudformation update-stack \
       ParameterKey=Environment,ParameterValue=${ENVIRONMENT} \
       ParameterKey=MigrationRepositoryUri,UsePreviousValue=true \
       ParameterKey=ServiceName,ParameterValue=${ECS_SERVICE_NAME} \
-      ParameterKey=ImageTag,ParameterValue="latest" \
+      ParameterKey=ImageTag,ParameterValue=${IMAGE_TAG} \
       ParameterKey=DBName,UsePreviousValue=true \
       ParameterKey=DBURL,UsePreviousValue=true \
       ParameterKey=MigrationChecksum,ParameterValue=${CHECKSUM} \
@@ -82,6 +106,8 @@ aws cloudformation wait stack-update-complete \
   --region ${AWS_REGION}
 
 print_red "4) Run the migration task"
+# NOTE: If the script fails at running the migration task in ECS, the checksum value won't be
+# reversed thus you have to manually run the "aws ecs run-task" part again.
 
 get_stack_resource() {
   STACK_NAME=${PROJECT}-${ENVIRONMENT}-${AWS_REGION}-$1 # Eg example-app-dev-eu-west-1-security-groups

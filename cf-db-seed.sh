@@ -41,9 +41,7 @@ set +x
 eval $(aws ecr get-login --no-include-email --region ${AWS_REGION})
 
 print_red "0) Building the new Docker images with the '${IMAGE_TAG}' tag"
-cd db
-docker build -t ${IMAGE_WITH_SEED_TAG} -f seed/Dockerfile .
-cd ..
+docker build -t ${IMAGE_WITH_SEED_TAG} -f ./db/seed/Dockerfile ./db
 
 print_red "1) Pushing the image with '${IMAGE_TAG}' tag"
 docker push ${IMAGE_WITH_SEED_TAG}

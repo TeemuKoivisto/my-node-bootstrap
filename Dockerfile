@@ -13,7 +13,6 @@ COPY package.json yarn.lock tsconfig.json tslint.json start.sh ./
 RUN yarn
 
 COPY ./src ./src
-COPY ./db ./db
 
 # Set NODE_ENV to production so that all optimizations are enabled
 ENV NODE_ENV production
@@ -41,7 +40,6 @@ RUN \
 WORKDIR ${INSTALL_PATH}
 
 COPY --from=builder ${INSTALL_PATH}/dist ./dist
-COPY --from=builder ${INSTALL_PATH}/db ./db
 COPY --from=builder ${INSTALL_PATH}/package.json ${INSTALL_PATH}/yarn.lock ${INSTALL_PATH}/start.sh ./
 
 RUN yarn install --production
